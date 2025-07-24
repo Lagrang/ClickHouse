@@ -75,7 +75,8 @@ RUN . /home/${USERNAME}/.profile && mkdir -p ~/.zfunc ~/.local/share/bash-comple
     && rustup completions zsh > ~/.zfunc/_rustup \
     && rustup completions bash > ~/.local/share/bash-completion/completions/rustup \
     && rustup toolchain install stable \
-    && rustup component add cargo clippy llvm-tools rust-analyzer rust-docs rustfmt
+    && rustup component add cargo clippy llvm-tools rust-analyzer rust-docs rustfmt \
+    && rustup toolchain install nightly-2025-07-07
 RUN mkdir /home/${USERNAME}/.ccache
 # Required to run of test suites
 # RUN pip install jinja2-cli clickhouse_driver scipy
