@@ -1,0 +1,75 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/cpp
+{
+	"name": "clickhouse",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": ".",
+		"options": [
+		],
+		"args": {
+			"USER_UID": "${localEnv:UID}",
+			"USER_GID": "${localEnv:UID}",
+			"USERNAME": "${localEnv:USER}"
+		}
+	},
+	"runArgs": [
+		"--userns=keep-id", // for Rootless Podman
+		"--security-opt", // disable SELinux to access project files
+		"label=disable",
+		"--cap-add=SYS_PTRACE", // to attach debugger
+		"--security-opt",
+		"seccomp=unconfined", // to allow 'special' syscalls, for instance, uring
+		"--security-opt",
+		"apparmor=unconfined",
+		"--network=host",
+	],
+	"mounts": [
+		{
+			"source": "/home/${localEnv:USER}/.ccache",
+			"target": "/home/${localEnv:USER}/.ccache",
+			"type": "bind"
+		}
+	],
+//	"containerUser": "${localEnv:USER}",
+//	 "updateRemoteUserUID": true,
+	"onCreateCommand": "mkdir -p /home/${localEnv:USER}/.config/clangd && echo 'AllScopes: true\nCompileFlags:\n\tAdd: [-ferror-limit=0]\n' > /home/${localEnv:USER}/.config/clangd/config.yaml && echo -e 'type format add -f d uint8_t\nsettings set target.import-std-module true\n' > /home/${localEnv:USER}/.lldbinit",
+	"customizations": {
+		"jetbrains": {
+			"plugins": [
+				"com.jetbrains.rust",
+				"idea.plugin.protoeditor",
+				"com.google.idea.bazel.clwb",
+				"org.toml.lang",
+				"PythonCore",
+				"idea.plugin.protoeditor",
+				"Rider UI Theme Pack",
+				"NewDark",
+				"name.kropp.intellij.makefile",
+				"ru.adelf.idea.dotenv",
+				"com.intellij.plugins.defaultforgnomekeymap",
+				"com.intellij.plugins.resharperkeymap",
+				"com.intellij.plugins.riderkeymap"
+			],
+			"backend": "CLion",
+			"settings": []
+		},
+		"vscode": {
+			"extensions": [
+				"llvm-vs-code-extensions.vscode-clangd",
+				"llvm-vs-code-extensions.lldb-dap",
+				"vadimcn.vscode-lldb",
+				"ms-vscode.cmake-tools",
+				"josetr.cmake-language-support-vscode",
+				"matepek.vscode-catch2-test-adapter",
+				"fredericbonnet.cmake-test-adapter",
+				"tdennis4496.cmantic",
+				"akiramiyakoda.cppincludeguard",
+				"ms-vscode.makefile-tools",
+				"donjayamanne.python-environment-manager",
+				"ms-python.isort",
+				"ms-python.pylint"
+			]
+		}
+	}
+}
